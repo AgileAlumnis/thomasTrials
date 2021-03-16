@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>9</zoom_level>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>450</x>
+      <y>486</y>
+      <w>243</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=[tag_id]-&gt;
+m2=0..n
+m1=0..m
+tags</panel_attributes>
+    <additional_attributes>30.0;10.0;250.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>225</x>
+      <y>495</y>
+      <w>252</w>
+      <h>234</h>
+    </coordinates>
+    <panel_attributes>Tag
+--
+_tag_map_file: str_
+_tag_map_path: str_
+- cookies: dict
+- pw_tag_id: int
+- dt_tag_id: int
+- tag_name: str
+- tag_file: File()
+- tag_map: File()
+- tag_data_file: File()
+--
++ read_tag_data(f_path, f_name, cookies)
++ set_name(name)
++ get_tag_id()
++ create_tag()
++ mass_load_tags(f_full_path, **kwargs)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1197</x>
+      <y>297</y>
+      <w>351</w>
+      <h>279</h>
+    </coordinates>
+    <panel_attributes>Album
+--
+_id_file_name: str_
+_tag_list_file: str_
+_image_file_type: str_
+_standard_album: int32_
+_album_string: str_
+- directory: str
+- id_file: File()
+- tag_file: File()
+- id: int {unique}
+- tags: pd.DataFrame
+- image_collection: pd.DataFrame
+- data_file: File()
+--
++ read_album_data(f_path, f_name_w_ext, cookies)
++ create_new_album(f_path, cookies)
++ read_album_id()
++ upload_album(f_path)
++ upload_collection(f_full_path, l_mode, l_refresh, **kwargs)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1008</x>
+      <y>288</y>
+      <w>216</w>
+      <h>90</h>
+    </coordinates>
+    <panel_attributes>lt=[album_id]-&gt;
+m2=0..n
+m1=0..m
+has</panel_attributes>
+    <additional_attributes>200.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>306</x>
+      <y>27</y>
+      <w>954</w>
+      <h>153</h>
+    </coordinates>
+    <panel_attributes>Piwigo
+--
+_url: str_
+_methods: dict_
+_data_store_path: str_
+_image_folder: str_
+--
++ @class: refresh_data(main_path, images_included, album_included, tags_included)
++ @static: str_pad(integer_number, str_length)
++ @static: pw_search_image(dt_id_str, cookies)
++ @static: create_random_string(number_of_characters)
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1233</x>
+      <y>171</y>
+      <w>108</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+has</panel_attributes>
+    <additional_attributes>100.0;140.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>873</x>
+      <y>171</y>
+      <w>45</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+has</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>369</x>
+      <y>171</y>
+      <w>171</w>
+      <h>342</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+has</panel_attributes>
+    <additional_attributes>10.0;360.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>63</x>
+      <y>369</y>
+      <w>144</w>
+      <h>81</h>
+    </coordinates>
+    <panel_attributes>Account
+--
+- username: string
+- password: string
+--
+login() -&gt; cookies</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>189</x>
+      <y>171</y>
+      <w>180</w>
+      <h>216</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+has 
+(not established)</panel_attributes>
+    <additional_attributes>10.0;220.0;150.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1062</x>
+      <y>648</y>
+      <w>171</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>File
+--
+- path: str
+- name: str
+- extension: str
+- full_path: str
+- name_w_extension: str
+--
++ set_file(**kwargs)
++ load_file(**kwargs)
++ save_data(f_content)
++ save_tag_map(new_tags)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1323</x>
+      <y>648</y>
+      <w>207</w>
+      <h>135</h>
+    </coordinates>
+    <panel_attributes>Directory
+--
+- path: str
+- file_list: lst
+- content_type: str [0..5]
+--
++ set_path(path)
++ set_file_list()
++ check_file_existence(file_name)
++ get_path()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1224</x>
+      <y>639</y>
+      <w>117</w>
+      <h>36</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+has</panel_attributes>
+    <additional_attributes>110.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>675</x>
+      <y>234</y>
+      <w>342</w>
+      <h>540</h>
+    </coordinates>
+    <panel_attributes>Image
+--
+_default_attribute: str_
+_image_name_separator: str_
+_file_name_splitter: str_
+_dt_id_std_length: int_
+_pw_id_std_length: int_
+_std_filename_lentgh: int_
+- image_id: int
+- cookies: dict
+- pw_id: int {unique}
+- dt_id: int {unique}
+- dt_id_str: str
+- pw_id_str: str
+- content: File()
+- content_type: str [0..1]
+- image_name: string
+- pw_image_filename: str
+- pw_image_name: str
+- pw_image_description: str
+- album_ids: str
+- album_id: int
+- tag_ids: str
+- sv_mode: bool
+- mv_mode: bool
+- api_data: dict
+--
++ read_image_data(f_path, f_name, album_list, cookies)
++ pop_api_data()
++ set_pw_id(**kwargs)
++ set_dt_id(**kwargs)
++ set_pw_image_filename(**kwargs)
++ set_pw_imagename()
++ set_image_tags(tag_list)
++ update_image_data(**kwargs)
++ category_switcher()
++ upload_image()
++ get_pw_image_data()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1359</x>
+      <y>45</y>
+      <w>153</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>Gui
+--
+--
++ @class: new_theme()
++ main_window()</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

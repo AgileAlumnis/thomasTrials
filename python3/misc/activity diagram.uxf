@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>7</zoom_level>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>714</x>
+      <y>0</y>
+      <w>435</w>
+      <h>1418</h>
+    </coordinates>
+    <panel_attributes>title:upload new tags
+Start
+analyse tag delta between dt and pw
+create upload file for new tags
+
+End
+Start
+Select upload file
+open upload file
+display message "Start uploading"
+login..
+Load input file into pd.DataFrame tag_list
+If 
+	[tag_list format]
+
+	[not tag_list format]
+	Call error
+	End
+Initiliaze new_tags DataFrame
+If
+	[line = end of tag_list]
+
+	[line &lt;&gt; end of tag_list]
+	new Tag() instance
+	set dt_tag_id
+	set tag_name
+	upload tag to Piwigo
+	If
+		[status = 200]
+		read PiwigoId from Response
+		append dt_id and pw_id \to tag_map file
+		
+		[status&lt;&gt;200]
+		read message from response
+		display error message
+		set pw_tag_id = 0
+	If
+		[pw_tag_id = 0]
+		delete tag instance
+
+		[pw_tag_id &lt;&gt; 0]
+		append tag ids to new_tags
+		delete tag instance
+EndIf
+If
+	[new_tags = empty]
+
+	[new_tags = empty]
+	set new_tags type
+	write new_tags to tag_map
+Display Message "Finished uploading"
+End
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>749</x>
+      <y>21</y>
+      <w>203</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>halign=right
+Outside System
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>721</x>
+      <y>1449</y>
+      <w>373</w>
+      <h>345</h>
+    </coordinates>
+    <panel_attributes>title:login
+Start
+get username &amp; password
+request authentication token
+If 
+	[status_code = 200]
+	extract authentication token from response
+	create cookie as dict
+	return cookie
+
+	[status_code &lt;&gt; 200]
+	Display error message
+	End
+	
+End
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>1162</x>
+      <y>0</y>
+      <w>1036</w>
+      <h>3229</h>
+    </coordinates>
+    <panel_attributes>title:upload / update album
+Start
+export images with dtId in filename\to single export folder
+create album in piwigo
+create album_id file in export folder
+create file with tag assignments\per image in export folder
+End
+Start
+Select upload folder
+Print"Start uploading album"
+Set directory path
+Set id_file
+Set tag_file
+login..
+If
+	[album_id file exists]
+	Load id_file
+	Extract album_id
+	If
+		[extract album_id = True]
+		Set album_id
+
+		[extract album_id = False]
+		Display error message
+		Set album_id to default
+	EndIf
+
+	[not album_id file exists]
+	Create album_name
+	Create album on Piwigo
+	If
+		[status_code = 200]
+
+		[status_code &lt;&gt; 200]
+		Display error message
+		Set album_id to default
+	EndIf
+	create file instance
+	set album_id file name / path
+	save album_id file	
+	delete file instance
+If
+	[tag_file exists]
+	load tag_file into tags
+	tags = True
+
+	[not tag_file exists]
+	tags = False
+	
+read jpg files in list
+If
+	[jpg files = END]
+
+	[jpg files &lt;&gt; END]
+	create&amp;initialize image instance
+	If
+		[dt_id in input]
+		Set dt_id of image
+		str_pad dt_id
+		Set dt_str_id of Image
+
+		[dt_id not in input]
+		Extract dt_id from jpg filename
+		Set dt_id of image
+		str_pad dt_id
+		Set dt_str_id of image
+	If
+		[pw_id in input]
+		Set pw_id of image
+		str_pad pw_id
+		Set pw_id_str of image
+
+		[pw_id not in input]
+		If
+			[dt_id = 0]
+			Display error
+			End
+
+			[dt_id &lt;&gt; 0}
+			Search dt_id on piwigo
+			If 
+				[search_result = 0]
+				pw_id = 0
+
+				[search_result = 1]
+				pw_id = search_result image_id
+
+				[else]
+				pw_id =  -1
+			
+		Set pw_id of image
+		str_pad pw_id
+		Set pw_id_str of image
+	If
+		[pw_id = -1]
+		Print warning
+		
+		[pw_id &lt;&gt; -1]
+		Load image binary
+		pop api_data
+		Load image to piwigo
+		If
+			[status_code = 200]
+			If 
+				[pw_id = 0]
+				Set pw_id of image to received pw_id
+				print creation messahe
+
+				[pw_id &lt;&gt; 0]
+				print update message
+			EndIf
+			
+			[status_code &lt;&gt; 200]
+			Print warning
+	EndIf
+	Create random string
+	Set pw_filename to random string + '_'+dt_id_str
+	Set pw_imagename
+	If
+		[tags = true]
+		If 
+			[dt_id in tags]
+			Set tags of image
+
+			[dt_id not in tags]
+			Set tags to default
+		EndIf
+		
+		[tags = false]
+	Switch Image categories (albumn_ids)
+	Set sv_mode
+	Set mv_mode
+	Set api_data
+	Update image data on piwigo
+	If 
+		[status_code = 200]
+
+		[status_code &lt;&gt; 200]
+		Display warning
+	Endif
+EndIf
+End
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2275</x>
+      <y>21</y>
+      <w>224</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>halign=right
+Outside System
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>0</x>
+      <y>0</y>
+      <w>656</w>
+      <h>1791</h>
+    </coordinates>
+    <panel_attributes>title:refresh piwigo information
+Start
+select main folder where information\will be stored
+set subfolders (pw_data, imageinfo)
+print "Starting download..."
+If
+	[subfolders exist]
+
+	[subfolders not exist]
+	create subfolders
+login..
+If
+	[album_included = True]
+	create album instance
+	read album data
+	If
+		[status_code = 200]
+		set file_content to response
+		save file_content in album_info
+		return album_list
+		
+		[status code &lt;&gt; 200]
+		Diplay error message
+		
+	delete album instance
+	
+	[album_included = False]
+If
+	[tag_included = True]
+	create tag instance
+	read tag data
+	If
+		[status_code = 200]
+		convert json to string
+		set file_content
+		save file_content in tag_info
+
+		[status_code &lt;&gt; 200]
+		Display error message
+		
+	delete tag instance
+
+	[tag_included = False]
+If
+	[image_included = False]
+	
+	[image_included = True]
+	create image instance
+	If
+		[i &lt;&gt; max(album_list]
+		create file instance
+		read imageinformation\for album_id
+		If
+			[status_code = 200]
+			convert json response to string
+			store imageinformation in file
+			delete file instance
+
+			[status_code &lt;&gt; 200]
+			Display error message
+		EndIf	
+		[i = max(album_list)]
+EndIf
+End
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>2226</x>
+      <y>0</y>
+      <w>787</w>
+      <h>2570</h>
+    </coordinates>
+    <panel_attributes>title:update collection
+Start
+create update file including dt_id, pw_id of image
+Add tags, description, album_ids (optional)
+End
+Start
+Select update file
+Specify replace mode, 
+Select update image-/filename flag
+Create File instance
+Set file attributes
+Load file content
+If
+	[file format &lt;&gt; OK]
+	Display error message
+	End
+
+	[file format = OK]
+login..
+If
+	[line = EOF]
+
+	[line &lt;&gt; EOF]
+	Initialize change string
+	Create Image instance
+	Set image pw_id &amp; pw_id_str
+	Set image dt_it &amp; dt_id_str
+	Request image piwigo data
+	If
+		[status_code = 200]
+		Extract filename &amp; file extension
+		Set file extension
+
+		[status_code &lt;&gt; 200]
+		Display warning
+	EndIf
+	If 
+		[update image-/filename = False]
+
+		[update image-/filename = True]
+		Create random string
+		Set pw_filename to random string + '-_' +dt_id_str
+		Amend change string
+	EndIf
+	If
+		[Replace mode &lt;&gt; overwrite]
+		Set sv_mode = 'fill if empty'
+		Set mv_mode = 'append'
+
+		[Repace mode = overwrite]
+		Set sv_mode = 'replace'
+		Set mv_mode = 'replace'
+	EndIf
+	If
+		[tags in file]
+		Set image tags
+		If
+			[image tags = NaN]
+			Set image tags to default
+
+			[image_tags &lt;&gt; NaN]
+			Amend change string
+		EndIf
+
+		[tags not in file]
+
+	EndIf
+	If
+		[album_ids in file]
+		Set image album_ids
+		If
+			[album_ids = NaN]
+			Set image album_ids to default
+
+			[album_ids &lt;&gt; NaN]
+			Amend change string
+		EndIf
+
+		[album_ids not in file]
+
+	EndIf
+	If
+		[description in file]
+		Set image description
+		If
+			[image description = NaN]
+			Set image description to default
+
+			[image description &lt;&gt; NaN]
+			Amend change string
+		EndIf
+
+		[description not in file]
+	
+	EndIf
+	Remove image default values
+	Copy image data to API data
+	Update image in piwigo
+	If
+		[status_code = 200]
+		Display update message
+
+		[status_code &lt;&gt; 200]
+		Display warning
+	EndIf
+Print "Finsished updating image information
+	
+
+		</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1407</x>
+      <y>14</y>
+      <w>203</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>halign=right
+Outside System
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>
