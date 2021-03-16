@@ -57,6 +57,18 @@ The API set to manage tags is unfortunately a bit limited for Piwigo. It essenti
 ## Python
 For documentation of the code pieces see source code. The following provides some screenshots, and some UML diagrams
 ### Screenshots
+Main window with options: 
+
+<p align="center">
+<img src="https://github.com/not1q84-1/homeserver/blob/master/source3/misc/Screenshot.jpg" width="450">
+</p>
+
+Information window during operation:
+
+<p align="center">
+<img src="https://github.com/not1q84-1/homeserver/blob/master/source3/misc/Screenshot2.jpg" width="450">
+</p>
+
 ### UML Diagrams
 #### Use Case Diagram
 ![Use Case Diagram](https://github.com/not1q84-1/homeserver/blob/master/source3/misc/UseCaseDiagramm.jpg)
