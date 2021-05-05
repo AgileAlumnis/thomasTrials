@@ -4,21 +4,21 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>450</x>
+      <x>405</x>
       <y>486</y>
-      <w>243</w>
-      <h>90</h>
+      <w>216</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=[tag_id]-&gt;
 m2=0..n
 m1=0..m
 tags</panel_attributes>
-    <additional_attributes>30.0;10.0;250.0;80.0</additional_attributes>
+    <additional_attributes>30.0;10.0;220.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>225</x>
+      <x>180</x>
       <y>495</y>
       <w>252</w>
       <h>234</h>
@@ -45,10 +45,10 @@ _tag_map_path: str_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1197</x>
+      <x>1152</x>
       <y>297</y>
       <w>351</w>
-      <h>279</h>
+      <h>306</h>
     </coordinates>
     <panel_attributes>Album
 --
@@ -57,6 +57,7 @@ _tag_list_file: str_
 _image_file_type: str_
 _standard_album: int32_
 _album_string: str_
+_latest_images_album_id_
 - directory: str
 - id_file: File()
 - tag_file: File()
@@ -65,11 +66,12 @@ _album_string: str_
 - image_collection: pd.DataFrame
 - data_file: File()
 --
-+ read_album_data(f_path, f_name_w_ext, cookies)
++ read_album_data(f_path, f_name_w_ext, cookies, save_data)
 + create_new_album(f_path, cookies)
 + read_album_id()
 + upload_album(f_path)
 + upload_collection(f_full_path, l_mode, l_refresh, **kwargs)
++ remove_from_latest_image_folder(date_before)
 
 </panel_attributes>
     <additional_attributes/>
@@ -77,24 +79,24 @@ _album_string: str_
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1008</x>
+      <x>981</x>
       <y>288</y>
-      <w>216</w>
-      <h>90</h>
+      <w>198</w>
+      <h>99</h>
     </coordinates>
     <panel_attributes>lt=[album_id]-&gt;
 m2=0..n
 m1=0..m
 has</panel_attributes>
-    <additional_attributes>200.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>180.0;10.0;10.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>306</x>
+      <x>261</x>
       <y>27</y>
       <w>954</w>
-      <h>153</h>
+      <h>162</h>
     </coordinates>
     <panel_attributes>Piwigo
 --
@@ -107,27 +109,27 @@ _image_folder: str_
 + @static: str_pad(integer_number, str_length)
 + @static: pw_search_image(dt_id_str, cookies)
 + @static: create_random_string(number_of_characters)
-
++ @static: get_pages(call_response)
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1233</x>
-      <y>171</y>
+      <x>1188</x>
+      <y>180</y>
       <w>108</w>
-      <h>144</h>
+      <h>135</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 has</panel_attributes>
-    <additional_attributes>100.0;140.0;10.0;10.0</additional_attributes>
+    <additional_attributes>100.0;130.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>873</x>
-      <y>171</y>
+      <x>801</x>
+      <y>180</y>
       <w>45</w>
       <h>81</h>
     </coordinates>
@@ -138,19 +140,19 @@ has</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>369</x>
-      <y>171</y>
+      <x>324</x>
+      <y>180</y>
       <w>171</w>
-      <h>342</h>
+      <h>333</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 has</panel_attributes>
-    <additional_attributes>10.0;360.0;170.0;10.0</additional_attributes>
+    <additional_attributes>10.0;350.0;170.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>63</x>
+      <x>18</x>
       <y>369</y>
       <w>144</w>
       <h>81</h>
@@ -166,20 +168,20 @@ login() -&gt; cookies</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>189</x>
-      <y>171</y>
+      <x>144</x>
+      <y>180</y>
       <w>180</w>
-      <h>216</h>
+      <h>207</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 has 
 (not established)</panel_attributes>
-    <additional_attributes>10.0;220.0;150.0;10.0</additional_attributes>
+    <additional_attributes>10.0;210.0;150.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1062</x>
+      <x>1017</x>
       <y>648</y>
       <w>171</w>
       <h>162</h>
@@ -202,7 +204,7 @@ has
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1323</x>
+      <x>1278</x>
       <y>648</y>
       <w>207</w>
       <h>135</h>
@@ -222,7 +224,7 @@ has
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1224</x>
+      <x>1179</x>
       <y>639</y>
       <w>117</w>
       <h>36</h>
@@ -234,9 +236,9 @@ has</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>675</x>
-      <y>234</y>
-      <w>342</w>
+      <x>603</x>
+      <y>243</y>
+      <w>387</w>
       <h>540</h>
     </coordinates>
     <panel_attributes>Image
@@ -266,7 +268,7 @@ _std_filename_lentgh: int_
 - mv_mode: bool
 - api_data: dict
 --
-+ read_image_data(f_path, f_name, album_list, cookies)
++ read_image_data(f_path, f_name, album_list, cookies, save_data)
 + pop_api_data()
 + set_pw_id(**kwargs)
 + set_dt_id(**kwargs)
@@ -282,7 +284,7 @@ _std_filename_lentgh: int_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1359</x>
+      <x>1314</x>
       <y>45</y>
       <w>153</w>
       <h>72</h>

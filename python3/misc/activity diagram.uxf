@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.3.0">
-  <zoom_level>7</zoom_level>
+  <zoom_level>6</zoom_level>
   <element>
     <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
     <coordinates>
-      <x>714</x>
+      <x>756</x>
       <y>0</y>
-      <w>435</w>
-      <h>1418</h>
+      <w>390</w>
+      <h>1212</h>
     </coordinates>
     <panel_attributes>title:upload new tags
 Start
@@ -67,10 +67,10 @@ End
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>749</x>
-      <y>21</y>
-      <w>203</w>
-      <h>119</h>
+      <x>792</x>
+      <y>18</y>
+      <w>174</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>halign=right
 Outside System
@@ -80,10 +80,10 @@ Outside System
   <element>
     <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
     <coordinates>
-      <x>721</x>
-      <y>1449</y>
-      <w>373</w>
-      <h>345</h>
+      <x>756</x>
+      <y>1218</y>
+      <w>336</w>
+      <h>294</h>
     </coordinates>
     <panel_attributes>title:login
 Start
@@ -106,10 +106,10 @@ End
   <element>
     <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
     <coordinates>
-      <x>1162</x>
+      <x>1164</x>
       <y>0</y>
-      <w>1036</w>
-      <h>3229</h>
+      <w>913</w>
+      <h>2959</h>
     </coordinates>
     <panel_attributes>title:upload / update album
 Start
@@ -240,7 +240,12 @@ If
 		EndIf
 		
 		[tags = false]
-	Switch Image categories (albumn_ids)
+	If
+		[Latest Images = True]
+		Add Latest Images album_id
+
+		[Latest Images = False
+	Switch Image categories (album_ids)
 	Set sv_mode
 	Set mv_mode
 	Set api_data
@@ -259,10 +264,10 @@ End
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2275</x>
-      <y>21</y>
-      <w>224</w>
-      <h>119</h>
+      <x>2142</x>
+      <y>18</y>
+      <w>192</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>halign=right
 Outside System
@@ -274,12 +279,14 @@ Outside System
     <coordinates>
       <x>0</x>
       <y>0</y>
-      <w>656</w>
-      <h>1791</h>
+      <w>744</w>
+      <h>1686</h>
     </coordinates>
     <panel_attributes>title:refresh piwigo information
 Start
 select main folder where information\will be stored
+select information type
+select album for image details
 set subfolders (pw_data, imageinfo)
 print "Starting download..."
 If
@@ -326,6 +333,12 @@ If
 	[image_included = True]
 	create image instance
 	If
+		[album_id(i_details) &lt;&gt;0]
+		album_list = album_id
+		
+		[album_id(i_details)=0]
+		album_list = album_list
+	If
 		[i &lt;&gt; max(album_list]
 		create file instance
 		read imageinformation\for album_id
@@ -338,7 +351,9 @@ If
 			[status_code &lt;&gt; 200]
 			Display error message
 		EndIf	
+		
 		[i = max(album_list)]
+
 EndIf
 End
 </panel_attributes>
@@ -347,10 +362,10 @@ End
   <element>
     <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
     <coordinates>
-      <x>2226</x>
+      <x>2100</x>
       <y>0</y>
-      <w>787</w>
-      <h>2570</h>
+      <w>695</w>
+      <h>2247</h>
     </coordinates>
     <panel_attributes>title:update collection
 Start
@@ -466,14 +481,51 @@ Print "Finsished updating image information
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1407</x>
-      <y>14</y>
-      <w>203</w>
-      <h>210</h>
+      <x>1386</x>
+      <y>12</y>
+      <w>174</w>
+      <h>180</h>
     </coordinates>
     <panel_attributes>halign=right
 Outside System
 </panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <type>com.baselet.element.old.allinone.ActivityDiagramText</type>
+    <coordinates>
+      <x>2802</x>
+      <y>0</y>
+      <w>320</w>
+      <h>687</h>
+    </coordinates>
+    <panel_attributes>title:remove from Latest Images
+Start
+Get before_date
+login..
+Create Image instance
+Load image information for Latest Images album..
+Delete Image instance
+Create Image list (from response
+Change type of date_creation, date_available
+Filter Image list by before_date
+If
+	[Image list = EOF]
+
+	[Image list &lt;&gt; EOF]
+	Create Image instance
+	Set cookies of Image instance
+	Set pw_id of Image instance
+	Get details of image..
+	Extract Album assignments from image details
+	Subtract Latest Images Album Id from assingments
+	Update image information..
+	Print "Removed image from Latest Images folder"
+Print "Finsished updating image information
+End
+	
+
+		</panel_attributes>
     <additional_attributes/>
   </element>
 </diagram>

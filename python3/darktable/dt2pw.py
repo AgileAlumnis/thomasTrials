@@ -13,6 +13,7 @@ import pandas as pd
 import os
 import PySimpleGUI as Sg
 import datetime
+from math import ceil
 
 logo_data = b'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'
 
@@ -49,7 +50,7 @@ class Piwigo:
         self.cookies = self.account.login()
 
     @classmethod
-    def refresh_data(cls, main_path, images_included, album_included, tags_included):
+    def refresh_data(cls, main_path, images_included, album_included, tags_included, album_id):
         """
         Downloads album details, tags and all image details from Piwigo and stores the information in json file in a
         selectablle folder main_path (the selected folder is amended by data_store_path and for image files additionally
@@ -79,7 +80,8 @@ class Piwigo:
         if album_included:
             print('Downloading Album data...')
             a = Album()
-            albums = a.read_album_data(main_path + cls.data_store_path, 'albuminformation.json', p_cookies)
+            response, albums = a.read_album_data(main_path + cls.data_store_path, 'albuminformation.json',
+                                                 p_cookies, True)
             del a
 
         if tags_included:
@@ -89,10 +91,18 @@ class Piwigo:
             del t
 
         if images_included:
-            print('Start downloading Image data...')
-            i = Image()
-            i.read_image_data(main_path + cls.data_store_path + cls.image_folder, 'images', albums, p_cookies)
-            del i
+
+            if album_id != '0':                             # Only download data for a single album
+                albums = [int(album_id)]
+
+            if not album_included and album_id == '0':      # We need to catch this exception
+                print('No albums for downloading image information specified. Skipping..')
+
+            else:
+                print('Start downloading Image data...')
+                i = Image()
+                i.read_image_data(main_path + cls.data_store_path + cls.image_folder, 'images', albums, p_cookies, True)
+                del i
 
         print('Piwigo data refreshed - Click OK to continue')
 
@@ -170,6 +180,22 @@ class Piwigo:
 
         return random_string
 
+    @staticmethod
+    def get_pages(call_response):
+        """Takes the JSON type API response and calculates the number of pages to query from it
+        :param call_response: response of an API call in JSON format; must include a 'paging' block
+        :type call_response: (json array)"""
+
+        per_page = int(call_response['result']['paging']['per_page'])
+        total_count = int(call_response['result']['paging']['total_count'])
+
+        if total_count < per_page:
+            no_of_pages = 1
+        else:
+            no_of_pages = ceil(total_count/per_page)
+
+        return no_of_pages
+
 
 class Account:
     """
@@ -223,7 +249,8 @@ class Album:
     tag_list_file = 'album_tags.csv'  # Filename where the program will find the tags for every image
     image_file_type = 'jpg'           # We build this for jpg files only for now.
     standard_album = 33               # The id of the default album to use (here: Miscellaneous)
-    album_string = 'album_id = '       # The string which is used in the album id file as lead into the id itself
+    album_string = 'album_id = '      # The string which is used in the album id file as lead into the id itself
+    latest_images_album_id = 182        # The id of the "Latest Images" album on the homepage of myfototours
 
     def __init__(self):
         self.directory = Directory(type=Album.image_file_type)
@@ -235,7 +262,7 @@ class Album:
         self.image_collection = pd.DataFrame
         self.data_file = File()
 
-    def read_album_data(self, f_path, f_name_w_ext, cookies):
+    def read_album_data(self, f_path, f_name_w_ext, cookies, save_data):
         """
         Reads all album information from Piwigo (also non-public, but user logged in must have access to the albums
         in scope) and stores it in the specficied location with the specified name in JSON format.
@@ -246,7 +273,9 @@ class Album:
         :type f_name_w_ext: (str)
         :param cookies: Valid cookie to authenticate request against Piwigo
         :type cookies: (dict)
-        :return: album_content (in json format): dict
+        :param save_data: Defines if album information is stored to a file or not
+        :type save_data: (bool)
+        :return: album_content (in json format): dict and album_list: list
         """
 
         data = {'recursive': 'true',
@@ -262,11 +291,15 @@ class Album:
             call_error('Error reading the album data from Piwigo...Skipping', json.dumps(r.json), 'soft')
         else:
             json_string = json.dumps(r.json())
-            self.data_file.set_file(path=f_path, name_w_extension=f_name_w_ext)
-            self.data_file.save_data(json_string)
-            print('Album data downloaded and saved to ' + self.data_file.full_path)
+            df = pd.DataFrame.from_dict(r.json()['result']['categories'])
+            album_list = pd.to_numeric(df['id']).tolist()
 
-        return r.json()
+            if save_data:
+                self.data_file.set_file(path=f_path, name_w_extension=f_name_w_ext)
+                self.data_file.save_data(json_string)
+                print('Album data downloaded and saved to ' + self.data_file.full_path)
+
+        return r.json(), album_list
 
     def create_new_album(self, cookies, f_path):
         """
@@ -332,7 +365,7 @@ class Album:
 
         return self.id
 
-    def upload_album(self, f_path):
+    def upload_album(self, f_path, no_updates, latest_images):
         """
         Reads all images from a folder and loads them to a Piwigo Account. An album_id to load to as well as a tags
         for each image is read from fixed files if provided. The Routine detects automatically if an image is already
@@ -367,6 +400,10 @@ class Album:
         else:
             self.create_new_album(a_cookies, f_path)
 
+        # We need to consider the "Latest Images" folder; as we have to assign TWO albums in case images should also
+        # be uploaded to "Latest Images" we need to use an update after the upload as the pw.images.addSimple method is
+        # used to upload images. Hence we do this in the update we do after each upload in anyway... ;-)
+
         # Check if tag_list exists and read into a pandas dataframe
 
         if self.directory.check_file_existence(self.tag_file.name + self.tag_file.extension):
@@ -395,8 +432,17 @@ class Album:
             if image.pw_id == -1:
                 print('WARNING: Piwigo search returned multiple results for ' + image.dt_id_str + ' ... Skipping')
                 continue
+
+            # If user request to NOT update existing images we just skip the procedure completely
+
+            elif image.pw_id != 0 and no_updates:       # pw_id != 0 means the image exists already
+                print('Existing image and updates are not requested for ' + image.dt_id_str + ' ... Skipping')
+                continue
+
+            # And if the user requested an update of existing images OR we have new images we run the upload routine
+
             else:
-                image.upload_image()  # if pw_id = 0 (new image) case is handled inside the  upload method
+                image.upload_image()           # if pw_id = 0 (new image) case is handled inside the  upload method
                 image.set_pw_image_filename()  # we do not need to provide 'extension' here - included in name!
                 image.set_pw_imagename()
                 if tags:  # If tag_file was loaded AND the dt_id is in the list then only we read the tag
@@ -408,7 +454,13 @@ class Album:
                         # Alternatively this single line should also work:
                         # image.set_image_tags(self.tags.loc[self.tags['dt_id'] == image.dt_id]['tagList'].values[0])
 
-                image.category_switcher()  # Upload requires 'category' and setInfo requires 'categories' attribute
+                # Upload requires 'category' and setInfo requires 'categories' attribute; this is the ultimate
+                # opportunity of integrate the "Latest Images" folder
+
+                if latest_images:
+                    image.category_switcher(latest_album_id=self.latest_images_album_id)
+                else:
+                    image.category_switcher()
 
                 # Not sure if this should be the final behavior but for an UPDATE this would REPLACE the existing
                 # filename, title and tag list
@@ -517,6 +569,68 @@ class Album:
 
         print('Finished updating collection data - click OK')
 
+    def remove_from_latest_images(self, date_before):
+        """This function removes all images which were uploaded before a certain date from the Latest Images folder
+         on Piwigo
+         :param date_before: the date before which images will be deleted
+         :type date_before: (datetime)"""
+
+        # We need to login to Piwigo of course
+
+        acc = Account()
+        p_cookies = acc.login()
+
+        # Now we can download the information step-by-step. We need an image instance to read all image
+        # details of the images in the Latest Images album on Piwigo
+
+        i = Image()
+        album_images = i.read_image_data('', '', [self.latest_images_album_id], p_cookies, False)
+        del i
+
+        # We convert the json response of the API call to a dataframe as usual
+
+        df = pd.DataFrame(album_images)
+
+        # We want to use the date_available (or perhaps the date_creation) as date filters and
+        # need to type them correctly
+
+        df = df.astype({'date_creation': 'datetime64', 'date_available': 'datetime64'})
+
+        # Now we filter the images with the cut-off date provided through the user input on the date when the
+        # image was UPLOADED. If we want to change that to the date when the image was taken we need to choose
+        # df['date_creation'] for filtering
+
+        df = df.loc[df['date_available'] < date_before]
+
+        # With the filtered list we iterate over all remaining images
+
+        for images in df.iterrows():
+
+            # Create an image instance and pass the already existing access cookie to it
+            i = Image()
+            i.cookies = p_cookies
+
+            # Set the pw_id from the data frame and call the API to get all image details
+            i.set_pw_id(pw_id=images[1][0])
+            image_data = i.get_pw_image_data()
+
+            # convert the array of assigned categories to a pandas dataframe and create a list of strings from the
+            # album ids
+            df_image = pd.DataFrame(image_data['result']['categories']).astype({'id': 'str'})
+            albums = df_image['id'].tolist()
+
+            # "Subtract" the Latest Album id from the list and update the image with the shortened list of albums
+            albums = list(set(albums) - set([str(self.latest_images_album_id)]))
+            i.album_ids = ';'.join(albums)
+            i.update_image_data(mv_mode='replace', sv_mode='replace', verbose=False)
+            print('Removed image with pw_id '+str(images[1][0]) + ' from Latest Images folder')
+
+            # Delete the image instance for the next round
+            del i
+
+        print('Removed all images uploaded before ' + datetime.datetime.strftime(date_before, '%Y-%m-%d %H:%M:%S')
+              + ' from Latest Images folder. Click OK to continue...')
+
 
 class Image:
     """
@@ -553,10 +667,10 @@ class Image:
                          'category': self.album_id,
                          'tag_ids': self.tag_ids,
                          'single_value_mode': self.sv_mode,
-                         'multiple_value': self.mv_mode
+                         'multiple_value_mode': self.mv_mode
                          }
 
-    def read_image_data(self, f_path, f_name, album_list, cookies):
+    def read_image_data(self, f_path, f_name, album_list, cookies, save_data):
         """
         Reads all image detailed information from Piwigo (also from non-public albums, but user logged in must have
         access to the albums in scope) and stores it in the specficied location with the specified name in JSON format.
@@ -571,24 +685,23 @@ class Image:
         :type album_list: (dict)
         :param cookies: Valid cookie to authenticate request against Piwigo
         :type cookies: (dict)
+        :param save_data: boolean flag to control if data is stored to a file (or not).
+        :type save_data: (bool)
         :return: album_content (in json format): dict
         """
 
-        # Long story short: I like (and half-understand) dataframes...this one contains the album_data
-
-        df = pd.DataFrame.from_dict(album_list['result']['categories'])
+        per_page = '500'
 
         # We need to run through every album and download a file per album with image details
 
-        for value in df['id'].iteritems():
+        for value in album_list:
 
-            f = File(path=f_path, name=f_name+'_for_album_id='+str(value[1]), extension='.json')
+            f = File(path=f_path, name=f_name+'_for_album_id='+str(value), extension='.json')
 
-            data = {'cat_id': value[1],
+            data = {'cat_id': value,
                     'recursive': 'false',
-                    'per_page': '500'               # Limits the number of returned images per page; not allowed: >500
-                    }                            # We hope we don't meet this limit for a single album and omit
-                                                    # the looping through pages
+                    'per_page': per_page
+                    }
 
             method = Piwigo.methods['read_images']
 
@@ -597,13 +710,33 @@ class Image:
             if r.status_code != 200:
                 call_error('Image data file download failed...Skipping', json.dumps(r.json()), 'soft')
             else:
-                json_string = json.dumps(r.json())
-                f.save_data(json_string)
-                print('Downloaded image data for album ' + str(value[1]) + ' to ' + f.name)
+                content = r.json()['result']['images']
+
+                # Potential paging makes this a bit more complicated. Calculate the number of pages first
+
+                no_pages = Piwigo.get_pages(r.json())
+
+                # If more than one page we have to load all the others in a loop
+
+                if no_pages != 1:
+
+                    for i in range(no_pages-1):
+                        data = {'cat_id': value, 'recursive': 'false', 'per_page': per_page, 'page': str(i+1)}
+
+                        # We abandon the error management here and hope that this will always work ;-):
+
+                        r = requests.get(Piwigo.url + '&method=' + method, data, cookies=cookies)
+                        content = content + r.json()['result']['images']
+
+                json_string = json.dumps(content)
+
+                if save_data:
+                    f.save_data(json_string)
+                    print('Downloaded image data for album ' + str(value) + ' to ' + f.name)
 
             del f
 
-        return
+        return content
 
     def pop_api_data(self):
         """
@@ -625,7 +758,7 @@ class Image:
                          'categories': self.album_ids,
                          'tag_ids': self.tag_ids,
                          'single_value_mode': self.sv_mode,
-                         'multiple_value': self.mv_mode
+                         'multiple_value_mode': self.mv_mode
                          }
 
         if self.pw_id == 0:
@@ -738,12 +871,15 @@ class Image:
 
         return r.json()
 
-    def category_switcher(self):
+    def category_switcher(self, **kwargs):
         """
         Piwigo API uses two different parameters for the album id (category and categories). While uploading new image
         we need to transfer the album id from category to categories and this is accomplished here
         """
-        self.album_ids = self.album_id
+        if 'latest_album_id' in kwargs:
+            self.album_ids = str(self.album_id) + ';' + str(kwargs.get('latest_album_id'))
+        else:
+            self.album_ids = self.album_id
         self.album_id = self.default_attribute
 
     def upload_image(self):
@@ -783,7 +919,7 @@ class Image:
     def get_pw_image_data(self):
         """
         This method allows to retrieve the attributes (filename, title, etc) of a particular image  from Piwigo. At
-        the moment we only need this to get the filename extension - but is obviousyl useful for more.
+        the moment we only need this to get the filename extension - but is obviously useful for more.
 
         :return: Piwigo attributes of an image
         """
@@ -894,7 +1030,7 @@ class Tag:
         """
         print('Start uploading new tags...')
 
-        # Loggin in first
+        # Login in first
         acc = Account()
         t_cookies = acc.login()
 
@@ -1196,27 +1332,31 @@ class Gui:
                                 size=(30, 1), justification='right', font=("Helvetica", 17, 'bold'))],
                 [Sg.Text('')],
                 [Sg.Frame(layout=[
-                    [Sg.Text("Select a folder to download to: "), Sg.Input(default_text=initial_dir, key="-DATA_FOLDER-", change_submits=True, size=(60, 1)),
+                    [Sg.Text("Select a folder to download to: "), Sg.Input(default_text=initial_dir, key="-DATA_FOLDER-", change_submits=True, size=(59, 1)),
                      Sg.FolderBrowse(key="-B_DATA_FOLDER-", initial_folder=initial_dir)],
                     [Sg.Checkbox('Albumdetails:', default=True, key='-ALBUM_INCLUDED-'),
                      Sg.Checkbox('Tags:', default=True, key='-TAGS_INCLUDED-'),
-                     Sg.Checkbox('Imagedetails:', default=True, key='-IMAGE_INCLUDED-')],
+                     Sg.Checkbox('Imagedetails:', default=True, key='-IMAGE_INCLUDED-'),
+                    Sg.Text("Only download image details for album_id: "),
+                     Sg.Input(default_text=0, key="-ALBUM-ID-", justification='right', change_submits=True, size=(3, 1))],
                     [Sg.Button("Start", key="-DATA_DOWNLOAD-", pad=((20, 10), (10, 10)))]
                 ], title='Download / Refresh Piwigo Data', font=("Helvetica", 12, 'bold'), title_color='#C5241C', relief=Sg.RELIEF_RAISED,
                     tooltip='Use this to download a full set of Piwigo data. This includes all album information, all \n'
                             'Piwigo tags and a file with image information for each album. The image information will be\n'
                             'stored in a sub folder to keep things tidy.')],
-                [Sg.Text('')],
+
                 [Sg.Frame(layout=[
                     [Sg.Text("Select a folder to upload: "), Sg.Input(default_text=initial_dir, key="-ALBUM_FOLDER-", change_submits=True, size=(63, 1)),
                      Sg.FolderBrowse(key="-B_ALBUM_FOLDER-", initial_folder=initial_dir)],
+                    [Sg.Checkbox('Do not uppdate existing images:', default=True, key='-NO-UPDATES-'),
+                     Sg.Checkbox('Include images in "Latest Images" folder:', default=True, key='-LATEST-IMAGES-')],
                     [Sg.Button("Start", key='-ALBUM_UPLOAD-', pad=((20, 10), (10, 10)))]
                 ],  title='Upload / Update Image Album', font=("Helvetica", 12, 'bold'), title_color='#C5241C', relief=Sg.RELIEF_RAISED,
                     tooltip='Use this to upload or update a complete album to Piwigo. The programm will read the album_id\n'
                             'from a file with the identical name if provided. If not provided album_id will be set to \n'
                             'Miscellaneous. If a file album_tags.csv (dt_id, tagList) is provided the provided tags will \n'
                             'assigned to the images automatically')],
-                [Sg.Text('')],
+
                 [Sg.Frame(layout=[
                       [Sg.Text("Select a file to upload: "), Sg.Input(key="-COLL_FILE-", change_submits=True, size=(65, 1)),
                        Sg.FileBrowse(key="-B_COLL_FILE-", initial_folder=initial_dir)],
@@ -1229,7 +1369,7 @@ class Gui:
                             ' (careful!) and if you want to re-create and load the image filename and title on Piwigo. The\n'
                             'load file must contain at least the dt_id and pw_id and can additionally have the columns\n'
                             ' album_ids, tags and description')],
-                [Sg.Text('')],
+
                 [Sg.Frame(layout=[
                     [Sg.Text("Select a file to upload: "), Sg.Input(key="-TAG_FILE-", change_submits=True, size=(65, 1)),
                      Sg.FileBrowse(key="-B_TAG_FILE-", initial_folder=initial_dir)],
@@ -1239,7 +1379,17 @@ class Gui:
                 ], title='Upload new Tags', font=("Helvetica", 12, 'bold'), title_color='#C5241C', relief=Sg.RELIEF_RAISED,
                     tooltip='Use this to upload new tags to Piwigo. The programm will automatically update the tag_map file\n'
                             'The file must contain the columns dt_id and tag')],
-                [Sg.Text('')],
+
+                [Sg.Frame(layout=[
+                   [Sg.Text('Select date (images uploaded before date will be removed):'),
+                    Sg.Input(size=(32, 1), key='-DATE-INPUT-', disabled=True),
+                    Sg.Button('Select Date', key='-SELECT-DATE-')],
+                   [Sg.Button("Start", key='-REMOVE-IMAGES-', pad=((20, 10), (10, 10)))]
+                ], title='Remove images from Latest Images folder', font=("Helvetica", 12, 'bold'), title_color='#C5241C',
+                  relief=Sg.RELIEF_RAISED,
+                  tooltip='Use this to remove images from the Latest Images folder. The date you select will be used as\n'
+                          'cut-off date; if uploaded before images will be removed')],
+
                 [Sg.CloseButton(button_text='Close Program', key='-CLOSE-', pad=((200, 10), (10, 10)))]
             ]
             return Sg.Window('myFototours - Darktable2Piwigo', layout, grab_anywhere=True, default_element_size=(40, 1), finalize=True)
@@ -1266,13 +1416,23 @@ class Gui:
                 # if OK is clicked close the information window and continue
                 continue
             if event == '-DATA_DOWNLOAD-':
+                acc = Account()
+                p_cookies = acc.login()
+                a = Album()
+                response, albums = a.read_album_data(values['-B_DATA_FOLDER-'], 'albuminformation.json',
+                                                     p_cookies, False)
+                del a
                 if values['-B_DATA_FOLDER-'] == '':
                     Sg.popup_ok('You did not edit the data folder. Continuing with:\n' +
                                 values['-DATA_FOLDER-'])
-
-                window2 = win_info()
-                Piwigo.refresh_data(values['-DATA_FOLDER-'] + '/', values['-IMAGE_INCLUDED-'],
-                                    values['-ALBUM_INCLUDED-'], values['-TAGS_INCLUDED-'])
+                if values['-ALBUM-ID-'] != '0' and (not values['-ALBUM-ID-'].isnumeric() or int(values['-ALBUM-ID-']) not in albums):
+                    Sg.popup_ok('Please enter a numeric value for the album_id. Album id must be between '
+                                +str(min(albums))+'and '+str(max(albums)))
+                    window1['-ALBUM-ID-'].update(0)
+                else:
+                    window2 = win_info()
+                    Piwigo.refresh_data(values['-DATA_FOLDER-'] + '/', values['-IMAGE_INCLUDED-'],
+                                        values['-ALBUM_INCLUDED-'], values['-TAGS_INCLUDED-'], values['-ALBUM-ID-'])
 
             if event == '-ALBUM_UPLOAD-':
                 if values['-B_ALBUM_FOLDER-'] == '':
@@ -1281,7 +1441,7 @@ class Gui:
 
                 window2 = win_info()
                 a = Album()
-                a.upload_album(values['-B_ALBUM_FOLDER-'] + '/')
+                a.upload_album(values['-B_ALBUM_FOLDER-'] + '/', values['-NO-UPDATES-'], values['-LATEST-IMAGES-'])
 
             if event == '-COLL_UPDATE-':
                 if values['-B_COLL_FILE-'] == '':
@@ -1299,6 +1459,24 @@ class Gui:
                     window2 = win_info()
                     t = Tag()
                     t.mass_load_tags(values["-B_TAG_FILE-"], sheet=values['-TAG_TAB-'])
+
+            if event == '-SELECT-DATE-':
+                date_selection = Sg.popup_get_date(close_when_chosen=True)
+                window1['-DATE-INPUT-'].update(datetime.datetime(date_selection[2],
+                                                                  date_selection[0], date_selection[1], 0, 0,0))
+
+            if event == '-REMOVE-IMAGES-':
+                if values['-DATE-INPUT-'] == '':
+                    Sg.popup_ok('Please select a date first')
+                else:
+                    date_s = datetime.datetime.strptime(values['-DATE-INPUT-'], '%Y-%m-%d %H:%M:%S')
+                    if datetime.datetime.now() < date_s:
+                        Sg.popup_ok('Please select a date before today')
+                        continue
+                    else:
+                        a = Album()
+                        window2 = win_info()
+                        a.remove_from_latest_images(date_s)
 
         window.close()
 
